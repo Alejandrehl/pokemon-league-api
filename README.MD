@@ -9,11 +9,32 @@
 
 ### Create League
 - In Postman send as { "league_name" : "Kanto"} // JSON(application/json) // POST
+- Condition: The league name must be unique.
 - http://0.0.0.0:5000/leagues to create a League.
 
 ### Create Trainer
 - In Postman send as { "league_name" : "Kanto", "trainer_name" : "Alejandro", "pokemons_number" : 6} // JSON(application/json) // POST
-- http://0.0.0.0:5000/trainers to create a League.
+- Conditions: 
+- The league name must be exist.
+- Pokemons number between 1 and 6.
+- Trainer must not be registered in another league
+- Pokemons are added according to the pokemons_number
+- http://0.0.0.0:5000/trainers to create a Trainer.
+
+### Battle
+- In Postman send as { "league_name" : "Kanto", "first_trainer_name" : "Alejandro", "second_trainer_name" : "Adriana"} // JSON(application/json) // POST
+- Conditions:
+- The league name must be exist.
+- Trainer names must exist.
+- Trainers must be different.
+- The trainer who has the most pokemons wins
+- http://0.0.0.0:5000/battle to play a battle.
 
 ### Dump pokemons saved in DB
 - http://0.0.0.0:5000/dbpokemons
+
+### Dump trainers saved in DB
+- http://0.0.0.0:5000/dbtrainers
+
+### Dump leagues saved in DB
+- http://0.0.0.0:5000/dbleagues

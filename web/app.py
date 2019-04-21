@@ -125,8 +125,21 @@ class Battle(Resource):
             trainer = trainers.find({"trainer_name": second_trainer_name})
             if not trainer[0]["league_name"] == league_name:
                 return jsonify(generateReturnDictionary(301, "Second trainer is not in this league."))
+        
+        if first_trainer_name == second_trainer_name:
+            return jsonify(generateReturnDictionary(301, "The trainers must be different."))
 
-        return "hola"
+        first_trainer_pokemons = pokemons.find({ "trainer_name" : first_trainer_name})
+        second_trainer_pokemons = pokemons.find({ "trainer_name" : second_trainer_name})
+
+        if first_trainer_pokemons.count() == second_trainer_pokemons.count():
+            return jsonify(generateReturnDictionary(200, "¡WoW! The trainers have tied."))
+        else: 
+            if first_trainer_pokemons.count() > second_trainer_pokemons.count():
+                return jsonify(generateReturnDictionary(200, "WoW! The trainer "+first_trainer_name+" has won."))
+            else:
+                return jsonify(generateReturnDictionary(200, "WoW! The trainer "+second_trainer_name+" has won.")) 
+
 
 api.add_resource(League, '/leagues')
 api.add_resource(Trainer, '/trainers')
