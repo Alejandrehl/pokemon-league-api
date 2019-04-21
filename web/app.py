@@ -205,11 +205,38 @@ class Training(Resource):
 
         return jsonify(generateReturnDictionary(200, "WoW! The trainer "+winner_name+" has won the traning."))
 
+class LeagueWinner(Resource):
+    def post(self):
+        postedData = request.get_json()
+        league_name = postedData["league_name"]
+
+        retJson, error = verifyLeagueName(league_name)
+        if error:
+            return jsonify(retJson)
+        
+        league_trainers = trainers.find({"league_name" : league_name})
+        count = 0
+        best_trainer = False
+        for count in range(league_trainers.count()):
+            actual_trainer = positions.find({ "trainer_name" : league_trainers[count]["trainer_name"]})
+    
+            if best_trainer == False:
+                best_trainer = actual_trainer
+            else:
+                if best_trainer[0]["victories"] < actual_trainer[0]["victories"]:
+                    best_trainer = actual_trainer
+            
+            count += 1
+
+        return dumps(best_trainer)
+            
+
 
 api.add_resource(League, '/leagues')
 api.add_resource(Trainer, '/trainers')
 api.add_resource(Battle, '/battle')
 api.add_resource(Training, '/training')
+api.add_resource(LeagueWinner, '/leaguewinner')
 
 @app.route("/positions/victories")
 def victories():

@@ -7,12 +7,12 @@
 - web/app.py.
 - For test "production server" use ec2-35-165-231-168.us-west-2.compute.amazonaws.com:5000/ instead of http://0.0.0.0:5000/
 
-### Create League
+### Create League METHOD POST
 - In Postman send as { "league_name" : "Kanto"} // JSON(application/json) // POST
 - Condition: The league name must be unique.
 - http://0.0.0.0:5000/leagues to create a League.
 
-### Create Trainer
+### Create Trainer METHOD POST
 - In Postman send as { "league_name" : "Kanto", "trainer_name" : "Alejandro", "pokemons_number" : 6} // JSON(application/json) // POST
 - Conditions: 
 - The league name must be exist.
@@ -21,7 +21,7 @@
 - Pokemons are added according to the pokemons_number.
 - http://0.0.0.0:5000/trainers to create a Trainer.
 
-### Battle
+### Battle METHOD POST
 - In Postman send as { "league_name" : "Kanto", "first_trainer_name" : "Alejandro", "second_trainer_name" : "Adriana"} // JSON(application/json) // POST
 - Conditions:
 - The league name must be exist.
@@ -31,13 +31,18 @@
 - The trainer who has the most pokemons wins.
 - http://0.0.0.0:5000/battle to play a battle.
 
-### Training
+### Training METHOD POST
 - In Postman send as { "first_trainer_name" : "Alejandro", "second_trainer_name" : "Adriana"} // JSON(application/json) // POST
 - Conditions:
 - Trainer names must exist.
 - Trainers must be different.
 - The trainer who has the most pokemons wins.
 - http://0.0.0.0:5000/training to play a training.
+
+### League Winner METHOD POST
+- In Postman send as { "league_name" : "Kanto"} // JSON(application/json) // POST
+- Condition: The league name must be exist.
+- http://0.0.0.0:5000/leaguewinner to show league winner.
 
 ### Positions order by Victories DESC/ METHOD GET
 - http://0.0.0.0:5000/positions/victories
