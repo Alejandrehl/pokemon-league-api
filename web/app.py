@@ -173,12 +173,43 @@ class Battle(Resource):
                 }
             })
 
-        return jsonify(generateReturnDictionary(200, "WoW! The trainer "+winner_name+" has won."))    
+        return jsonify(generateReturnDictionary(200, "WoW! The trainer "+winner_name+" has won."))
+
+class Training(Resource):
+    def post(self):
+        postedData = request.get_json()
+        first_trainer_name = postedData["first_trainer_name"]
+        second_trainer_name = postedData["second_trainer_name"]
+
+        if trainers.find({"trainer_name": first_trainer_name}).count() == 0:
+            return jsonify(generateReturnDictionary(301, "First Trainer is invalid."))
+
+        if trainers.find({"trainer_name": second_trainer_name}).count() == 0:
+            return jsonify(generateReturnDictionary(301, "SecondTrainer is invalid."))
+        
+        if first_trainer_name == second_trainer_name:
+            return jsonify(generateReturnDictionary(301, "The trainers must be different."))
+
+        first_trainer_pokemons = pokemons.find({ "trainer_name" : first_trainer_name})
+        second_trainer_pokemons = pokemons.find({ "trainer_name" : second_trainer_name})
+
+        if first_trainer_pokemons.count() == second_trainer_pokemons.count():
+            return jsonify(generateReturnDictionary(200, "¡WoW! The trainers have tied."))
+        else: 
+            if first_trainer_pokemons.count() > second_trainer_pokemons.count():
+                winner_name = first_trainer_name
+                loser_name = second_trainer_name
+            else:
+                winner_name = second_trainer_name
+                loser_name = first_trainer_name
+
+        return jsonify(generateReturnDictionary(200, "WoW! The trainer "+winner_name+" has won the traning."))
 
 
 api.add_resource(League, '/leagues')
 api.add_resource(Trainer, '/trainers')
 api.add_resource(Battle, '/battle')
+api.add_resource(Training, '/training')
 
 @app.route("/positions/victories")
 def victories():

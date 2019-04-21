@@ -31,6 +31,14 @@
 - The trainer who has the most pokemons wins.
 - http://0.0.0.0:5000/battle to play a battle.
 
+### Training
+- In Postman send as { "first_trainer_name" : "Alejandro", "second_trainer_name" : "Adriana"} // JSON(application/json) // POST
+- Conditions:
+- Trainer names must exist.
+- Trainers must be different.
+- The trainer who has the most pokemons wins.
+- http://0.0.0.0:5000/training to play a training.
+
 ### Positions order by Victories DESC/ METHOD GET
 - http://0.0.0.0:5000/positions/victories
 
