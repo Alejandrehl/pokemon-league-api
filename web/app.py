@@ -4,6 +4,9 @@ from pymongo import MongoClient
 from bson.json_util import dumps
 import pokebase as pb
 import requests as req
+import json
+import collections
+import secrets
 
 app = Flask(__name__)
 api = Api(app)
@@ -17,7 +20,8 @@ pokemons = db["pokemons"]
 def getPokemons():
     url = "https://pokeapi.co/api/v2/pokemon"
     data = req.get(url).json()
-    return jsonify(data["results"])
+    return data["results"]
+    #return jsonify(data["results"])
 
 def leagueExist(league_name):
     if leagues.find({"league_name": league_name}).count() == 0:
@@ -83,7 +87,7 @@ class Trainer(Resource):
         #     "trainer_name" : trainer_name,
         #     "pokemons_number" : pokemons_number
         # })
-        return getPokemons()
+        return secrets.choice(list(getPokemons()))
         # count = 0
         # for count in range(pokemons_number):
         #     count += 1
