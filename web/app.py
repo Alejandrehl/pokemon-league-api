@@ -21,7 +21,6 @@ def getPokemons():
     url = "https://pokeapi.co/api/v2/pokemon"
     data = req.get(url).json()
     return data["results"]
-    #return jsonify(data["results"])
 
 def leagueExist(league_name):
     if leagues.find({"league_name": league_name}).count() == 0:
@@ -82,19 +81,19 @@ class Trainer(Resource):
         if not trainers.find({"trainer_name": trainer_name}).count() == 0:
             return jsonify(generateReturnDictionary(301, "Trainer is already in a league."))
 
-        # trainers.insert({
-        #     "league_name" : league_name,
-        #     "trainer_name" : trainer_name,
-        #     "pokemons_number" : pokemons_number
-        # })
-        return secrets.choice(list(getPokemons()))
-        # count = 0
-        # for count in range(pokemons_number):
-        #     count += 1
-        #     pokemons.insert({
-        #         "pokemon_name" : "pokemon "+str(count),
-        #         "trainer_name" : trainer_name
-        #     })
+        trainers.insert({
+            "league_name" : league_name,
+            "trainer_name" : trainer_name,
+            "pokemons_number" : pokemons_number
+        })
+
+        count = 0
+        for count in range(pokemons_number):
+            count += 1
+            pokemons.insert({
+                "pokemon_name" : secrets.choice(list(getPokemons()))['name'],
+                "trainer_name" : trainer_name
+            })
 
         retJson = {
             "status" : 200,
@@ -104,6 +103,10 @@ class Trainer(Resource):
 
 api.add_resource(League, '/leagues')
 api.add_resource(Trainer, '/trainers')
+
+@app.route("/dbpokemons")
+def dbPokemons():
+    return dumps(pokemons.find())
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0')
