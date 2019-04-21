@@ -18,7 +18,7 @@ def leagueExist(league_name):
 class League(Resource):
     def post(self):
         postedData = request.get_json()
-        league_name = postedData["name"]
+        league_name = postedData["league_name"]
 
         if leagueExist(league_name):
             retJson = {
@@ -33,12 +33,41 @@ class League(Resource):
 
         retJson = {
             "status" : 200,
-            "msg" : "You succesfully signed up for the API"
+            "msg" : "You created a League succesfully"
         }
 
         return jsonify(retJson)
 
+def generateReturnDictionary(status, msg):
+    retJson = {
+        "status" : status,
+        "msg" : msg
+    }
+    return retJson
+
+def verifyLeagueName(league_name):
+    if not leagueExist(league_name):
+        return generateReturnDictionary(301, "Invalid league name."), True
+
+    return None, False
+
+class Trainer(Resource):
+    def post(self):
+        postedData = request.get_json()
+        league_name = postedData["league_name"]
+        pokemons_number = postedData["pokemons_number"]
+
+        retJson, error = verifyLeagueName(league_name)
+        if error:
+            return jsonify(retJson)
+
+        if pokemons_number < 1 or pokemons_number > 6:
+            return jsonify(generateReturnDictionary(301, "Invalid pokemons number."))
+        
+        return jsonify(pokemons_number)
+
 api.add_resource(League, '/leagues')
+api.add_resource(Trainer, '/trainers')
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0')
