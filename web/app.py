@@ -101,12 +101,48 @@ class Trainer(Resource):
         }
         return jsonify(retJson)
 
+class Battle(Resource):
+    def post(self):
+        postedData = request.get_json()
+        league_name = postedData["league_name"]
+        first_trainer_name = postedData["first_trainer_name"]
+        second_trainer_name = postedData["second_trainer_name"]
+
+        retJson, error = verifyLeagueName(league_name)
+        if error:
+            return jsonify(retJson)
+
+        if trainers.find({"trainer_name": first_trainer_name}).count() == 0:
+            return jsonify(generateReturnDictionary(301, "First Trainer is invalid."))
+        else: 
+            trainer = trainers.find({"trainer_name": first_trainer_name})
+            if not trainer[0]["league_name"] == league_name:
+                return jsonify(generateReturnDictionary(301, "First trainer is not in this league."))
+
+        if trainers.find({"trainer_name": second_trainer_name}).count() == 0:
+            return jsonify(generateReturnDictionary(301, "SecondTrainer is invalid."))
+        else: 
+            trainer = trainers.find({"trainer_name": second_trainer_name})
+            if not trainer[0]["league_name"] == league_name:
+                return jsonify(generateReturnDictionary(301, "Second trainer is not in this league."))
+
+        return "hola"
+
 api.add_resource(League, '/leagues')
 api.add_resource(Trainer, '/trainers')
+api.add_resource(Battle, '/battle')
 
 @app.route("/dbpokemons")
 def dbPokemons():
     return dumps(pokemons.find())
+
+@app.route("/dbleagues")
+def dbLeagues():
+    return dumps(leagues.find())
+
+@app.route("/dbtrainers")
+def dbTrainers():
+    return dumps(trainers.find())
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0')
