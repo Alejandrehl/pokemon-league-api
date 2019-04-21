@@ -16,6 +16,7 @@ db = client.pokemonleagues
 leagues = db["leagues"]
 trainers = db["trainers"]
 pokemons = db["pokemons"]
+positions = db["positions"]
 
 def getPokemons():
     url = "https://pokeapi.co/api/v2/pokemon"
@@ -136,14 +137,58 @@ class Battle(Resource):
             return jsonify(generateReturnDictionary(200, "¡WoW! The trainers have tied."))
         else: 
             if first_trainer_pokemons.count() > second_trainer_pokemons.count():
-                return jsonify(generateReturnDictionary(200, "WoW! The trainer "+first_trainer_name+" has won."))
+                winner_name = first_trainer_name
+                loser_name = second_trainer_name
             else:
-                return jsonify(generateReturnDictionary(200, "WoW! The trainer "+second_trainer_name+" has won.")) 
+                winner_name = second_trainer_name
+                loser_name = first_trainer_name
+
+        if positions.find({"trainer_name": winner_name}).count() == 0:
+            positions.insert({
+                "trainer_name" : winner_name,
+                "victories" : 1,
+                "defeats" : 0
+            })
+        else:
+            positions.update({
+                "trainer_name" : winner_name
+            }, {
+                "$set" : {
+                    "victories" : positions.find({"trainer_name": winner_name})[0]["victories"] + 1
+                }
+            })
+
+        if positions.find({"trainer_name": loser_name}).count() == 0:
+            positions.insert({
+                "trainer_name" : loser_name,
+                "victories" : 0,
+                "defeats" : 1
+            })
+        else:
+            positions.update({
+                "trainer_name" : loser_name
+            }, {
+                "$set" : {
+                    "defeats" : positions.find({"trainer_name": loser_name})[0]["defeats"] + 1
+                }
+            })
+
+        return jsonify(generateReturnDictionary(200, "WoW! The trainer "+winner_name+" has won."))    
 
 
 api.add_resource(League, '/leagues')
 api.add_resource(Trainer, '/trainers')
 api.add_resource(Battle, '/battle')
+
+@app.route("/positions/victories")
+def victories():
+    dbPositions = positions.find().sort("victories", -1)
+    return dumps(dbPositions)
+
+@app.route("/positions/defeats")
+def defeats():
+    dbPositions = positions.find().sort("defeats", -1)
+    return dumps(dbPositions)
 
 @app.route("/dbpokemons")
 def dbPokemons():

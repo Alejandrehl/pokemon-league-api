@@ -31,11 +31,17 @@
 - The trainer who has the most pokemons wins.
 - http://0.0.0.0:5000/battle to play a battle.
 
-### Dump pokemons saved in DB
+### Positions order by Victories DESC/ METHOD GET
+- http://0.0.0.0:5000/positions/victories
+
+### Positions order by Defeats DESC/ METHOD GET
+- http://0.0.0.0:5000/positions/defeats
+
+### Dump pokemons saved in DB / METHOD GET
 - http://0.0.0.0:5000/dbpokemons
 
-### Dump trainers saved in DB
+### Dump trainers saved in DB / METHOD GET
 - http://0.0.0.0:5000/dbtrainers
 
-### Dump leagues saved in DB
+### Dump leagues saved in DB / METHOD GET
 - http://0.0.0.0:5000/dbleagues
