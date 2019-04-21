@@ -260,6 +260,10 @@ def dbLeagues():
 def dbTrainers():
     return dumps(trainers.find())
 
+@app.route("/")
+def Hello():
+    return "Welcome to Pokemon League, please follow instructions of Github for the use the API."
+
 if __name__ == "__main__":
     app.run(host='0.0.0.0')
         
