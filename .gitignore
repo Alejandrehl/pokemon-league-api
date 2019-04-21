@@ -1,3 +1,4 @@
 .DS_store
 .editoconfig
 __pycache__
+.vscode
