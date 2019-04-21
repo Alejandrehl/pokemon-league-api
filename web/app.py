@@ -1,7 +1,7 @@
 from flask import Flask, jsonify, request
 from flask_restful import Api, Resource
 from pymongo import MongoClient
-import json
+from bson.json_util import dumps
 
 app = Flask(__name__)
 api = Api(app)
@@ -26,7 +26,7 @@ class League(Resource):
         if leagueExist(league_name):
             retJson = {
                 "status" : 301,
-                "msg" : "Invalid username"
+                "msg" : "Invalid league name."
             }
             return jsonify(retJson)
         
@@ -67,9 +67,11 @@ class Trainer(Resource):
 
         if pokemons_number < 1 or pokemons_number > 6:
             return jsonify(generateReturnDictionary(301, "Invalid pokemons number."))
+        
+        if trainers.find({"trainer_name": trainer_name}).count() == 0:
+            return jsonify(generateReturnDictionary(301, "Trainer is already in a league."))
 
-
-        leagues.insert({
+        trainers.insert({
             "league_name" : league_name,
             "trainer_name" : trainer_name,
             "pokemons_number" : pokemons_number
@@ -91,6 +93,18 @@ class Trainer(Resource):
 
 api.add_resource(League, '/leagues')
 api.add_resource(Trainer, '/trainers')
+
+@app.route("/allleagues")
+def getLeagues():
+    return dumps(leagues.find())
+    
+@app.route("/allpokemons")
+def getPokemons():
+    return dumps(pokemons.find())
+
+@app.route("/alltrainers")
+def getTrainers():
+    return dumps(trainers.find())
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0')
