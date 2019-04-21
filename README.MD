@@ -17,8 +17,8 @@
 - Conditions: 
 - The league name must be exist.
 - Pokemons number between 1 and 6.
-- Trainer must not be registered in another league
-- Pokemons are added according to the pokemons_number
+- Trainer must not be registered in another league.
+- Pokemons are added according to the pokemons_number.
 - http://0.0.0.0:5000/trainers to create a Trainer.
 
 ### Battle
@@ -27,7 +27,8 @@
 - The league name must be exist.
 - Trainer names must exist.
 - Trainers must be different.
-- The trainer who has the most pokemons wins
+- Trainers must be in the league.
+- The trainer who has the most pokemons wins.
 - http://0.0.0.0:5000/battle to play a battle.
 
 ### Dump pokemons saved in DB
